@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
+       <NavPanel />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -18,6 +19,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
+  
           Learn React
         </a>
       </header>
@@ -27,8 +29,20 @@ function App() {
 
 function MyButton() {
   return (
-  <button>ayo</button>
+  <button className="MyButton">ayo</button>
   );
+}
+
+function NavPanel() {
+  return (
+  <ul className="NavPanel">
+  <li><a href="#home">Home</a></li>
+  <li><a href="#news">Announcements</a></li>
+  <li><a href="#contact">Contact</a></li>
+  <li><a href="#about">Weather</a></li>
+  <li><a href="#about">FAQs</a></li>
+</ul>
+  )
 }
 
 export default App;
