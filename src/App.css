@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 5vmin;
   pointer-events: none;
 }
 
@@ -49,6 +49,7 @@ li {
 }
 
 li a {
+  height: 5min;
   display: block;
   color: white;
   text-align: center;
@@ -60,11 +61,11 @@ li a:hover {
   background-color: #111;
 }
 
-@keyframes App-logo-spin {
+/*@keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
-}
+}*/

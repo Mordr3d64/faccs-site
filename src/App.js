@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import logo from './logo.png';
 import './App.css';
 
 function App() {
@@ -6,7 +6,6 @@ function App() {
     <div className="App">
        <NavPanel />
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -35,7 +34,9 @@ function MyButton() {
 
 function NavPanel() {
   return (
+    
   <ul className="NavPanel">
+  <li><img src={logo} className="App-logo" alt="logo" /></li>
   <li><a href="#home">Home</a></li>
   <li><a href="#news">Announcements</a></li>
   <li><a href="#contact">Contact</a></li>
