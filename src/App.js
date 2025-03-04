@@ -7,7 +7,7 @@ function App() {
        <NavPanel />
       <header className="App-header">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Text goes here
         </p>
         <p>
           <MyButton />
@@ -34,15 +34,14 @@ function MyButton() {
 
 function NavPanel() {
   return (
-    
   <ul className="NavPanel">
-  <li><img src={logo} className="App-logo" alt="logo" /></li>
-  <li><a href="#home">Home</a></li>
-  <li><a href="#news">Announcements</a></li>
-  <li><a href="#contact">Contact</a></li>
-  <li><a href="#about">Weather</a></li>
-  <li><a href="#about">FAQs</a></li>
-</ul>
+    <li><img src={logo} className="App-logo" alt="logo" /></li>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#news">Announcements</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#about">Weather</a></li>
+    <li><a href="#about">FAQs</a></li>
+  </ul>
   )
 }
 
