@@ -38,7 +38,6 @@ function NavPanel() {
   );
 }
 
-// These are placeholder components for now
 function Home() {
   return <p>Welcome to the Home Page!</p>;
 }
