@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/faccs-site/static/css/main.8e6cb871.css",
+    "main.js": "/faccs-site/static/js/main.4f3ea526.js",
+    "static/js/453.9c9a4ba4.chunk.js": "/faccs-site/static/js/453.9c9a4ba4.chunk.js",
+    "static/media/logo.png": "/faccs-site/static/media/logo.9ea045e4639ad170e874.png",
+    "index.html": "/faccs-site/index.html",
+    "main.8e6cb871.css.map": "/faccs-site/static/css/main.8e6cb871.css.map",
+    "main.4f3ea526.js.map": "/faccs-site/static/js/main.4f3ea526.js.map",
+    "453.9c9a4ba4.chunk.js.map": "/faccs-site/static/js/453.9c9a4ba4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8e6cb871.css",
+    "static/js/main.4f3ea526.js"
+  ]
+}
