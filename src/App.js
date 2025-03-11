@@ -21,9 +21,6 @@ function App() {
   );
 }
 
-function MyButton() {
-  return <button className="MyButton">ayo</button>;
-}
 
 function NavPanel() {
   return (
