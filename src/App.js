@@ -28,16 +28,17 @@ function App() {
 function NavPanel() {
   return (
     <ul className="NavPanel">
-      <li><img src={logo} className="App-logo" alt="logo" /></li>
-      <li><Link to="/">Home</Link></li>
-      <li><Link to="/announcements">Announcements</Link></li>
-      <li><Link to="/contact">Contact</Link></li>
-      <li><Link to="/weather">Weather</Link></li>
-      <li><Link to="/faqs">FAQs</Link></li>
-      <li><Link to="/admin">Admin Login</Link></li>
+      <li className="NavItem"><img src={logo} className="App-logo" alt="logo" /></li>
+      <li className="NavItem"><Link className="NavLink" to="/">Home</Link></li>
+      <li className="NavItem"><Link className="NavLink" to="/announcements">Announcements</Link></li>
+      <li className="NavItem"><Link className="NavLink" to="/contact">Contact</Link></li>
+      <li className="NavItem"><Link className="NavLink" to="/weather">Weather</Link></li>
+      <li className="NavItem"><Link className="NavLink" to="/faqs">FAQs</Link></li>
+      <li className="NavItem"><Link className="NavLink" to="/admin">Admin</Link></li>
     </ul>
   );
 }
+
 
 function Home() {
   return <p>Welcome to the Home Page!</p>;
@@ -71,7 +72,7 @@ function Admin() {
   return (
     <div>
       <h2>Admin - Member Records</h2>
-      <table border="1" cellPadding="8" style={{ margin: 'auto', width: '80%', borderCollapse: 'collapse' }}>
+      <table className="MemberTable">
         <thead>
           <tr>
             <th>ID</th>

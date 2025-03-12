@@ -36,7 +36,7 @@
 
 }
 
-ul {
+.NavPanel {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -44,12 +44,12 @@ ul {
   background-color: #333;
 }
 
-li {
+.NavItem {
   float: left;
 }
 
-li a {
-  height: 5min;
+.NavLink {
+  height: 5vmin;
   display: block;
   color: white;
   text-align: center;
@@ -57,15 +57,42 @@ li a {
   text-decoration: none;
 }
 
-li a:hover {
+.NavLink:hover {
   background-color: #111;
 }
 
-/*@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}*/
+
+.MemberTable {
+  width: 90%;
+  margin: 30px auto;
+  border-collapse: collapse;
+  background-color: white;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: black;
+  text-align: left;
+}
+
+.MemberTable th {
+  padding: 12px;
+  background-color: #f4f4f4;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+  text-align: left;
+}
+
+.MemberTable td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.MemberTable tr:hover {
+  background-color: #f9f9f9;
+}
+
+.MemberTable tr:last-child td {
+  border-bottom: none;
+}
+
