@@ -1,10 +1,8 @@
+import React, { useEffect, useState, useRef } from "react";
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.png';
 import './App.css';
-import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
-
-
 
 function App() {
   return (
@@ -26,7 +24,6 @@ function App() {
   );
 } 
 
-
 function NavPanel() {
   return (
     <ul className="NavPanel">
@@ -41,7 +38,6 @@ function NavPanel() {
   );
 }
 
-
 function Home() {
   return <p>Welcome to the Home Page!</p>;
 }
@@ -49,7 +45,6 @@ function Home() {
 function Announcements() {
   return <p>Here are the latest announcements.</p>;
 }
-
 
 const Contact = () => {
   const form = useRef();
@@ -90,18 +85,46 @@ const Contact = () => {
   );
 };
 
-
 function Weather() {
-  return <p>Check out the weather forecast here.</p>;
+  const [weatherData, setWeatherData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=13.4088&longitude=122.5615&hourly=temperature_2m,relative_humidity_2m,temperature_180m")
+      .then(response => response.json())
+      .then(data => {
+        setWeatherData(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <p>Loading weather data...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <div>
+      <h2>Weather Information</h2>
+      {weatherData && (
+        <div>
+          <p>Temperature (2m): {weatherData.hourly.temperature_2m[0]}°C</p>
+          <p>Relative Humidity (2m): {weatherData.hourly.relative_humidity_2m[0]}%</p>
+          <p>Temperature (180m): {weatherData.hourly.temperature_180m[0]}°C</p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function FAQs() {
   return <p>Frequently Asked Questions</p>;
 }
 
-//admin panel
 function Admin() {
-  //temp data for member records
   const members = [
     { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'Member', status: 'Active' },
     { id: 2, name: 'Bob Johnson', email: 'bob@example.com', role: 'Admin', status: 'Inactive' },
@@ -137,6 +160,5 @@ function Admin() {
     </div>
   );
 }
-
 
 export default App;
