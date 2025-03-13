@@ -1,6 +1,8 @@
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.png';
 import './App.css';
+import React, { useRef } from 'react';
+import emailjs from '@emailjs/browser';
 
 
 
@@ -48,28 +50,45 @@ function Announcements() {
   return <p>Here are the latest announcements.</p>;
 }
 
-function Contact() {
+
+const Contact = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+
+    emailjs.sendForm('service_d4dbrnt', 'template_g85r5ik', form.current, 'kjhLCa49ByPlH7xGn')
+      .then((result) => {
+          console.log(result.text);
+          alert('Message sent successfully!');
+      }, (error) => {
+          console.log(error.text);
+          alert('Failed to send message, please try again later.');
+      });
+
+    e.target.reset(); // Reset form after submission
+  };
+
   return (
-    <div className="ContactForm">
+    <form ref={form} onSubmit={sendEmail} className="contact-form">
       <h2>Contact Us</h2>
-      <form>
-        <div className="FormField">
-          <label htmlFor="name">Name:</label>
-          <input type="text" id="name" name="name" placeholder="Your name" required />
-        </div>
-        <div className="FormField">
-          <label htmlFor="email">Email:</label>
-          <input type="email" id="email" name="email" placeholder="Your email" required />
-        </div>
-        <div className="FormField">
-          <label htmlFor="message">Message:</label>
-          <textarea id="message" name="message" placeholder="Your message" rows="5" required />
-        </div>
-        <button type="submit" className="SubmitButton">Send Message</button>
-      </form>
-    </div>
+      <div>
+        <label>Name</label>
+        <input type="text" name="name" required />
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" required />
+      </div>
+      <div>
+        <label>Message</label>
+        <textarea name="message" required></textarea>
+      </div>
+      <input type="hidden" name="title" value="General Inquiry" />
+      <button type="submit">Send</button>
+    </form>
   );
-}
+};
 
 
 function Weather() {
