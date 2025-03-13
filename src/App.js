@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
 import { HashRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import logo from './logo.png';
 import './App.css';
+import React, { useRef, useState, useEffect } from 'react';
 import emailjs from '@emailjs/browser';
 
 function App() {
@@ -22,12 +22,14 @@ function App() {
       </div>
     </Router>
   );
-} 
+}
 
 function NavPanel() {
   return (
     <ul className="NavPanel">
-      <li className="NavItem"><img src={logo} className="App-logo" alt="logo" /></li>
+      <li className="NavItem">
+        <img src={logo} className="App-logo" alt="logo" />
+      </li>
       <li className="NavItem"><Link className="NavLink" to="/">Home</Link></li>
       <li className="NavItem"><Link className="NavLink" to="/announcements">Announcements</Link></li>
       <li className="NavItem"><Link className="NavLink" to="/contact">Contact</Link></li>
@@ -61,7 +63,7 @@ const Contact = () => {
           alert('Failed to send message, please try again later.');
       });
 
-    e.target.reset(); // Reset form after submission
+    e.target.reset();
   };
 
   return (
@@ -85,37 +87,43 @@ const Contact = () => {
   );
 };
 
+// Weather Component with API Fetching
 function Weather() {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=13.4088&longitude=122.5615&hourly=temperature_2m,relative_humidity_2m,temperature_180m")
-      .then(response => response.json())
-      .then(data => {
-        setWeatherData(data);
-        setLoading(false);
-      })
-      .catch(err => {
+    const fetchWeather = async () => {
+      try {
+        const response = await fetch(
+          'https://api.open-meteo.com/v1/forecast?latitude=13.4088&longitude=122.5615&hourly=temperature_2m,relative_humidity_2m'
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setWeatherData(data.hourly);
+      } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchWeather();
   }, []);
 
   if (loading) return <p>Loading weather data...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p>Error fetching weather: {error}</p>;
 
   return (
     <div>
-      <h2>Weather Information</h2>
-      {weatherData && (
-        <div>
-          <p>Temperature (2m): {weatherData.hourly.temperature_2m[0]}°C</p>
-          <p>Relative Humidity (2m): {weatherData.hourly.relative_humidity_2m[0]}%</p>
-          <p>Temperature (180m): {weatherData.hourly.temperature_180m[0]}°C</p>
-        </div>
-      )}
+      <h2>Weather Forecast</h2>
+      <p><strong>Temperature:</strong> {weatherData.temperature_2m[0]}°C</p>
+      <p><strong>Humidity:</strong> {weatherData.relative_humidity_2m[0]}%</p>
     </div>
   );
 }
@@ -124,6 +132,7 @@ function FAQs() {
   return <p>Frequently Asked Questions</p>;
 }
 
+// Admin Panel
 function Admin() {
   const members = [
     { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'Member', status: 'Active' },
