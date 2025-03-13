@@ -49,8 +49,28 @@ function Announcements() {
 }
 
 function Contact() {
-  return <p>Contact us at email@example.com</p>;
+  return (
+    <div className="ContactForm">
+      <h2>Contact Us</h2>
+      <form>
+        <div className="FormField">
+          <label htmlFor="name">Name:</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required />
+        </div>
+        <div className="FormField">
+          <label htmlFor="email">Email:</label>
+          <input type="email" id="email" name="email" placeholder="Your email" required />
+        </div>
+        <div className="FormField">
+          <label htmlFor="message">Message:</label>
+          <textarea id="message" name="message" placeholder="Your message" rows="5" required />
+        </div>
+        <button type="submit" className="SubmitButton">Send Message</button>
+      </form>
+    </div>
+  );
 }
+
 
 function Weather() {
   return <p>Check out the weather forecast here.</p>;
