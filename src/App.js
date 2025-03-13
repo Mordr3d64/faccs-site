@@ -57,7 +57,7 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_d4dbrnt', 'template_g85r5ik', form.current, 'kjhLCa49ByPlH7xGn')
+    emailjs.sendForm('service_d4dbrnt', 'template_g85r5ik', form.current, 'public_kjhLCa49ByPlH7xGn')
       .then((result) => {
           console.log(result.text);
           alert('Message sent successfully!');
