@@ -52,16 +52,19 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_d4dbrnt', 'template_2ejxt28', form.current, 'public_kjhLCa49ByPlH7xGn')
+    const formData = new FormData(form.current);
+    console.log('Form Data:', Object.fromEntries(formData.entries()));
+
+    emailjs.sendForm('service_d4dbrnt', 'template_2ejxt28', form.current, 'kjhLCa49ByPlH7xGn')
       .then((result) => {
-          console.log('SUCCESS!', result.text);
-          alert('Message sent successfully!');
+        console.log(result.text);
+        alert('Message sent successfully!');
       }, (error) => {
-          console.error('FAILED...', error.text);
-          alert('Failed to send message, please try again later.');
+        console.log(error.text);
+        alert('Failed to send message, please try again later.');
       });
 
-    e.target.reset(); // Reset form after submission
+    e.target.reset();
   };
 
   return (
@@ -79,11 +82,12 @@ const Contact = () => {
         <label>Message</label>
         <textarea name="message" required></textarea>
       </div>
-      <input type="hidden" name="title" value="General Inquiry" />
       <button type="submit">Send</button>
     </form>
   );
 };
+
+
 
 function Weather() {
   const [weatherData, setWeatherData] = useState(null);
