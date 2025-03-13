@@ -87,30 +87,17 @@ const Contact = () => {
   );
 };
 
-// Weather Component with Multi-Location Support
+// Weather Component with API Fetching
 function Weather() {
-  const [location, setLocation] = useState("manila");
   const [weatherData, setWeatherData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Define location coordinates
-  const locations = {
-    "manila": { lat: 14.5995, lon: 120.9842 },
-    "camarines_sur": { lat: 13.6595, lon: 123.2616 },
-    "cebu": { lat: 10.3157, lon: 123.8854 },
-    "davao": { lat: 7.1907, lon: 125.4553 }
-  };
 
   useEffect(() => {
     const fetchWeather = async () => {
-      setLoading(true);
-      setError(null);
-
       try {
-        const { lat, lon } = locations[location];
         const response = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m`
+          'https://api.open-meteo.com/v1/forecast?latitude=13.4088&longitude=122.5615&hourly=temperature_2m,relative_humidity_2m'
         );
 
         if (!response.ok) {
@@ -127,28 +114,16 @@ function Weather() {
     };
 
     fetchWeather();
-  }, [location]);
+  }, []);
+
+  if (loading) return <p>Loading weather data...</p>;
+  if (error) return <p>Error fetching weather: {error}</p>;
 
   return (
     <div>
       <h2>Weather Forecast</h2>
-      <label>Select Location: </label>
-      <select value={location} onChange={(e) => setLocation(e.target.value)}>
-        <option value="manila">Manila</option>
-        <option value="camarines_sur">Camarines Sur</option>
-        <option value="cebu">Cebu</option>
-        <option value="davao">Davao</option>
-      </select>
-
-      {loading && <p>Loading weather data...</p>}
-      {error && <p>Error fetching weather: {error}</p>}
-
-      {weatherData && (
-        <div>
-          <p><strong>Temperature:</strong> {weatherData.temperature_2m[0]}°C</p>
-          <p><strong>Humidity:</strong> {weatherData.relative_humidity_2m[0]}%</p>
-        </div>
-      )}
+      <p><strong>Temperature:</strong> {weatherData.temperature_2m[0]}°C</p>
+      <p><strong>Humidity:</strong> {weatherData.relative_humidity_2m[0]}%</p>
     </div>
   );
 }
