@@ -121,7 +121,7 @@ function Weather() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+  const apiKey = '57388a64e5aa4abba7551507251403'; // Replace with your actual API key
   const location = 'Camarines Sur, Philippines';
   const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
 
