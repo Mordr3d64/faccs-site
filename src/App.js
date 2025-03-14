@@ -82,7 +82,7 @@ const Contact = () => {
   const sendEmail = (e) => {
     e.preventDefault();
 
-    emailjs.sendForm('service_d4dbrnt', 'template_2ejxt28', form.current, 'public_kjhLCa49ByPlH7xGn')
+    emailjs.sendForm('service_d4dbrnt', 'template_2ejxt28', form.current, 'kjhLCa49ByPlH7xGn')
       .then((result) => {
           console.log('SUCCESS!', result.text);
           alert('Message sent successfully!');
