@@ -121,19 +121,19 @@ function Weather() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+  const location = 'Camarines Sur, Philippines';
+  const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
+
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        const response = await fetch(
-          'https://api.open-meteo.com/v1/forecast?latitude=13.4088&longitude=122.5615&hourly=temperature_2m,relative_humidity_2m'
-        );
-
+        const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const data = await response.json();
-        setWeatherData(data.hourly);
+        setWeatherData(data.current);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -148,10 +148,15 @@ function Weather() {
   if (error) return <p>Error fetching weather: {error}</p>;
 
   return (
-    <div>
-      <h2>Weather Forecast</h2>
-      <p><strong>Temperature:</strong> {weatherData.temperature_2m[0]}°C</p>
-      <p><strong>Humidity:</strong> {weatherData.relative_humidity_2m[0]}%</p>
+    <div className="weather-container">
+      <h2>Weather in Camarines Sur</h2>
+      <p><strong>Temperature:</strong> {weatherData.temp_c}°C</p>
+      <p><strong>Condition:</strong> {weatherData.condition.text}</p>
+      <p><strong>Humidity:</strong> {weatherData.humidity}%</p>
+      <p><strong>Wind Speed:</strong> {weatherData.wind_kph} kph</p>
+      <p><strong>UV Index:</strong> {weatherData.uv}</p>
+      <p><strong>Precipitation:</strong> {weatherData.precip_mm} mm</p>
+      <img src={weatherData.condition.icon} alt="Weather icon" />
     </div>
   );
 }
