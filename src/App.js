@@ -41,7 +41,7 @@ function NavPanel() {
 }
 
 function Home() {
-  return <p>Welcome to the Home Page!</p>;
+  return <p>uiiai</p>;
 }
 
 function Announcements() {
