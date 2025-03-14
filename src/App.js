@@ -117,23 +117,35 @@ const Contact = () => {
 
 // Weather Component with API Fetching
 function Weather() {
+  const locations = {
+    "Camarines Sur": "Camarines Sur",
+    "Manila": "Manila",
+    "Davao": "Davao",
+    "Cebu": "Cebu",
+    "Baguio": "Baguio",
+  };
+
+  const [selectedLocation, setSelectedLocation] = useState("Camarines Sur");
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const apiKey = '57388a64e5aa4abba7551507251403'; // Replace with your actual API key
-  const location = 'Camarines Sur, Philippines';
-  const apiUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
-
   useEffect(() => {
     const fetchWeather = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        setWeatherData(data.current);
+        const response = await fetch(
+          `https://wttr.in/${locations[selectedLocation]}?format=%C|%t|%h|%w|%u|%p`
+        );
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const textData = await response.text();
+        const [condition, temperature, humidity, wind, uv, precipitation] = textData.split("|");
+
+        setWeatherData({ condition, temperature, humidity, wind, uv, precipitation });
       } catch (err) {
         setError(err.message);
       } finally {
@@ -142,24 +154,35 @@ function Weather() {
     };
 
     fetchWeather();
-  }, []);
-
-  if (loading) return <p>Loading weather data...</p>;
-  if (error) return <p>Error fetching weather: {error}</p>;
+  }, [selectedLocation]);
 
   return (
     <div className="weather-container">
-      <h2>Weather in Camarines Sur</h2>
-      <p><strong>Temperature:</strong> {weatherData.temp_c}°C</p>
-      <p><strong>Condition:</strong> {weatherData.condition.text}</p>
-      <p><strong>Humidity:</strong> {weatherData.humidity}%</p>
-      <p><strong>Wind Speed:</strong> {weatherData.wind_kph} kph</p>
-      <p><strong>UV Index:</strong> {weatherData.uv}</p>
-      <p><strong>Precipitation:</strong> {weatherData.precip_mm} mm</p>
-      <img src={weatherData.condition.icon} alt="Weather icon" />
+      <h2>Weather Forecast</h2>
+      <select onChange={(e) => setSelectedLocation(e.target.value)} value={selectedLocation}>
+        {Object.keys(locations).map((place) => (
+          <option key={place} value={place}>{place}</option>
+        ))}
+      </select>
+
+      {loading && <p>Loading weather data...</p>}
+      {error && <p>Error fetching weather: {error}</p>}
+      {weatherData && (
+        <div>
+          <p><strong>📍 Location:</strong> {selectedLocation}</p>
+          <p><strong>🌡 Temperature:</strong> {weatherData.temperature}</p>
+          <p><strong>🌥 Condition:</strong> {weatherData.condition}</p>
+          <p><strong>💧 Humidity:</strong> {weatherData.humidity}</p>
+          <p><strong>🌬 Wind Speed:</strong> {weatherData.wind}</p>
+          <p><strong>☀️ UV Index:</strong> {weatherData.uv}</p>
+          <p><strong>🌧 Precipitation:</strong> {weatherData.precipitation}</p>
+          <img src={`https://wttr.in/${locations[selectedLocation]}_0.png`} alt="Weather icon" />
+        </div>
+      )}
     </div>
   );
 }
+
 
 function FAQs() {
   const [openIndex, setOpenIndex] = useState(null);
