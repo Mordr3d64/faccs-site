@@ -183,7 +183,7 @@ function Weather() {
   );
 }
 
-
+//static
 function FAQs() {
   const [openIndex, setOpenIndex] = useState(null);
 
@@ -244,6 +244,7 @@ function FAQs() {
   );
 }
 
+//static
 // Admin Panel
 function Admin() {
   const members = [
