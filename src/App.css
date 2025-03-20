@@ -503,3 +503,109 @@
     max-width: 100%;
   }
 }
+
+/* Login Page Styling */
+.login-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.login-form {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+  margin-bottom: 30px;
+  color: #333;
+  text-align: center;
+  font-size: 1.8em;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3DC6A6;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 14px;
+  background-color: #3DC6A6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-form button:hover {
+  background-color: #34af94;
+  transform: translateY(-2px);
+}
+
+.error-message {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9em;
+}
+
+/* Logout Button Styling */
+.logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 10px 20px;
+}
+
+.logout-button:hover {
+  background-color: #3DC6A6;
+  color: white;
+}
+
+/* Responsive Design for Login */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 20px;
+    padding: 10px;
+  }
+
+  .login-form {
+    padding: 20px;
+  }
+
+  .login-form h2 {
+    font-size: 1.5em;
+  }
+}
