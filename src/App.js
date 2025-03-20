@@ -26,22 +26,42 @@ function App() {
 
 function NavPanel() {
   return (
-    <ul className="NavPanel">
-      <li className="NavItem">
-        <img src={logo} className="App-logo" alt="logo" />
-      </li>
-      <li className="NavItem"><Link className="NavLink" to="/">Home</Link></li>
-      <li className="NavItem"><Link className="NavLink" to="/announcements">Announcements</Link></li>
-      <li className="NavItem"><Link className="NavLink" to="/contact">Contact</Link></li>
-      <li className="NavItem"><Link className="NavLink" to="/weather">Weather</Link></li>
-      <li className="NavItem"><Link className="NavLink" to="/faqs">FAQs</Link></li>
-      <li className="NavItem"><Link className="NavLink" to="/admin">Admin</Link></li>
-    </ul>
+    <nav className="NavPanel">
+      <div className="nav-brand">
+        <img src={logo} className="App-logo" alt="FACCS Logo" />
+        <span>FACCS</span>
+      </div>
+      <ul className="nav-links">
+        <li><Link className="NavLink" to="/">Home</Link></li>
+        <li><Link className="NavLink" to="/announcements">Announcements</Link></li>
+        <li><Link className="NavLink" to="/contact">Contact</Link></li>
+        <li><Link className="NavLink" to="/weather">Weather</Link></li>
+        <li><Link className="NavLink" to="/faqs">FAQs</Link></li>
+        <li><Link className="NavLink" to="/admin">Admin</Link></li>
+      </ul>
+    </nav>
   );
 }
 
 function Home() {
-  return <p>uiiai</p>;
+  return (
+    <div className="home-container">
+      <div className="home-content">
+        <div className="home-text">
+          <h1>Federation of Agriculture Cooperatives in Camarines Sur</h1>
+          <div className="mission-section">
+            <h2>Our Mission</h2>
+            <p className="mission-text">
+              "To build the financial, technical, and marketing capabilities of agricultural cooperatives through the delivery of quality products and services."
+            </p>
+          </div>
+        </div>
+        <div className="home-image">
+          <img src="https://placehold.co/600x400" alt="FACCS" />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Announcements() {
@@ -159,24 +179,55 @@ function Weather() {
   return (
     <div className="weather-container">
       <h2>Weather Forecast</h2>
-      <select onChange={(e) => setSelectedLocation(e.target.value)} value={selectedLocation}>
-        {Object.keys(locations).map((place) => (
-          <option key={place} value={place}>{place}</option>
-        ))}
-      </select>
+      <div className="location-selector">
+        <select 
+          onChange={(e) => setSelectedLocation(e.target.value)} 
+          value={selectedLocation}
+        >
+          {Object.keys(locations).map((place) => (
+            <option key={place} value={place}>{place}</option>
+          ))}
+        </select>
+      </div>
 
-      {loading && <p>Loading weather data...</p>}
-      {error && <p>Error fetching weather: {error}</p>}
+      {loading && <div className="loading">Loading weather data...</div>}
+      {error && <div className="error">Error fetching weather: {error}</div>}
       {weatherData && (
-        <div>
-          <p><strong>📍 Location:</strong> {selectedLocation}</p>
-          <p><strong>🌡 Temperature:</strong> {weatherData.temperature}</p>
-          <p><strong>🌥 Condition:</strong> {weatherData.condition}</p>
-          <p><strong>💧 Humidity:</strong> {weatherData.humidity}</p>
-          <p><strong>🌬 Wind Speed:</strong> {weatherData.wind}</p>
-          <p><strong>☀️ UV Index:</strong> {weatherData.uv}</p>
-          <p><strong>🌧 Precipitation:</strong> {weatherData.precipitation}</p>
-          <img src={`https://wttr.in/${locations[selectedLocation]}_0.png`} alt="Weather icon" />
+        <div className="weather-info">
+          <div className="weather-header">
+            <h3>{selectedLocation}</h3>
+            <img 
+              src={`https://wttr.in/${locations[selectedLocation]}_0.png`} 
+              alt="Weather icon" 
+              className="weather-icon"
+            />
+          </div>
+          <div className="weather-details">
+            <div className="weather-detail-item">
+              <span className="label">Temperature</span>
+              <span className="value">{weatherData.temperature}</span>
+            </div>
+            <div className="weather-detail-item">
+              <span className="label">Condition</span>
+              <span className="value">{weatherData.condition}</span>
+            </div>
+            <div className="weather-detail-item">
+              <span className="label">Humidity</span>
+              <span className="value">{weatherData.humidity}</span>
+            </div>
+            <div className="weather-detail-item">
+              <span className="label">Wind Speed</span>
+              <span className="value">{weatherData.wind}</span>
+            </div>
+            <div className="weather-detail-item">
+              <span className="label">UV Index</span>
+              <span className="value">{weatherData.uv}</span>
+            </div>
+            <div className="weather-detail-item">
+              <span className="label">Precipitation</span>
+              <span className="value">{weatherData.precipitation}</span>
+            </div>
+          </div>
         </div>
       )}
     </div>
