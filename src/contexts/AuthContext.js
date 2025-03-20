@@ -5,10 +5,11 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch('http://localhost:5001/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,11 +24,14 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(data.data.user));
         setIsAuthenticated(true);
         setUser(data.data.user);
+        setError(null);
         return true;
       }
+      setError(data.message);
       return false;
     } catch (error) {
       console.error('Login error:', error);
+      setError('Failed to connect to the server. Please try again.');
       return false;
     }
   };
@@ -37,6 +41,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     setIsAuthenticated(false);
     setUser(null);
+    setError(null);
   };
 
   // Check if user is already logged in (on page refresh/reload)
@@ -51,7 +56,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, error }}>
       {children}
     </AuthContext.Provider>
   );
