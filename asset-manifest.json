@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/faccs-site/static/css/main.b5dcaaf1.css",
-    "main.js": "/faccs-site/static/js/main.b20e15ea.js",
+    "main.css": "/faccs-site/static/css/main.3f75fe3a.css",
+    "main.js": "/faccs-site/static/js/main.34ea922e.js",
     "static/js/453.9c9a4ba4.chunk.js": "/faccs-site/static/js/453.9c9a4ba4.chunk.js",
     "static/media/logo.png": "/faccs-site/static/media/logo.9ea045e4639ad170e874.png",
     "index.html": "/faccs-site/index.html",
-    "main.b5dcaaf1.css.map": "/faccs-site/static/css/main.b5dcaaf1.css.map",
-    "main.b20e15ea.js.map": "/faccs-site/static/js/main.b20e15ea.js.map",
+    "main.3f75fe3a.css.map": "/faccs-site/static/css/main.3f75fe3a.css.map",
+    "main.34ea922e.js.map": "/faccs-site/static/js/main.34ea922e.js.map",
     "453.9c9a4ba4.chunk.js.map": "/faccs-site/static/js/453.9c9a4ba4.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.b5dcaaf1.css",
-    "static/js/main.b20e15ea.js"
+    "static/css/main.3f75fe3a.css",
+    "static/js/main.34ea922e.js"
   ]
 }
