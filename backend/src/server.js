@@ -1,8 +1,7 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const authRoutes = require('./routes/authRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -13,18 +12,41 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('Connected to MongoDB successfully');
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-    process.exit(1);
-  });
+// Static admin credentials
+const ADMIN_CREDENTIALS = {
+  email: 'admin@faccs.com',
+  password: 'admin123'
+};
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+    const token = jwt.sign(
+      { email, role: 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user: {
+          name: 'Admin User',
+          email: ADMIN_CREDENTIALS.email,
+          role: 'admin'
+        }
+      }
+    });
+  } else {
+    res.status(401).json({
+      status: 'fail',
+      message: 'Incorrect email or password'
+    });
+  }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -4,6 +4,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+<<<<<<< HEAD
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
 
@@ -57,6 +58,25 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, user, login, logout, error }}>
+=======
+
+  const login = (email, password) => {
+    // For demo purposes, using hardcoded credentials
+    // In a real application, this should validate against a backend
+    if (email === "admin@faccs.com" && password === "admin123") {
+      setIsAuthenticated(true);
+      return true;
+    }
+    return false;
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+>>>>>>> ad4eb15 (modularized App component structure, included auth)
       {children}
     </AuthContext.Provider>
   );

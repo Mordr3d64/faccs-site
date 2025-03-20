@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+<<<<<<< HEAD
   const { login, error } = useAuth();
   const navigate = useNavigate();
 
@@ -12,6 +13,20 @@ function Login() {
     e.preventDefault();
     if (await login(email, password)) {
       navigate('/admin');
+=======
+  const [error, setError] = useState('');
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (login(email, password)) {
+      navigate('/admin');
+    } else {
+      setError('Invalid email or password');
+>>>>>>> ad4eb15 (modularized App component structure, included auth)
     }
   };
 
