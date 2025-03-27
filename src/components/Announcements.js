@@ -17,6 +17,7 @@ function Announcements() {
     { title: "Weather Alert: Typhoon Advisory", content: "A tropical storm is approaching, and we advise all farmers to secure their crops and equipment." },
   ];
 
+  
   return (
     <div className="announcements-container">
       <h1>Announcements</h1>

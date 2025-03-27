@@ -594,6 +594,42 @@
   color: white;
 }
 
+<<<<<<< Updated upstream
+=======
+
+.add-announcement-button {
+  margin-bottom: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.announcement-form {
+  margin-bottom: 20px;
+}
+
+.announcement-form input,
+.announcement-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.announcement-form button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+>>>>>>> Stashed changes
 /* Responsive Design for Login */
 @media (max-width: 480px) {
   .login-container {
