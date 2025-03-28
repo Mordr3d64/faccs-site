@@ -1,8 +1,12 @@
 import React from 'react';
-import image1 from '../assets/images/image1.jpg'; // Import images
-import image2 from '../assets/images/image2.jpg';
-import image3 from '../assets/images/image3.jpg';
-import image4 from '../assets/images/image4.jpg';
+import { Carousel } from 'react-responsive-carousel'; // Import Carousel component
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // Import the carousel CSS styles
+
+// Import images from the 'assets/images' folder
+import image1 from '../images/image1.jpg';
+import image2 from '../images/image2.jpg';
+import image3 from '../images/image3.jpg';
+import image4 from '../images/image4.jpg'; 
 
 function Home() {
   return (
@@ -29,6 +33,9 @@ function Home() {
             </div>
             <div>
               <img src={image3} alt="Image 3" />
+            </div>
+            <div>
+              <img src={image4} alt="Image 4" /> 
             </div>
           </Carousel>
         </div>
