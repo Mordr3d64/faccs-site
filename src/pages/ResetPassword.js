@@ -1,12 +1,17 @@
+// ResetPassword.js
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // to get token from URL
-import axios from 'axios'; // Assuming you're using axios to make API calls
 
-const ResetPassword = () => {
-  const { token } = useParams(); // Get the token from the URL
+const ResetPassword = ({ match }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    // Extract token from the URL (sent via email)
+    const { token } = match.params;
+    setToken(token);
+  }, [match.params]);
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
@@ -25,20 +30,11 @@ const ResetPassword = () => {
     }
 
     try {
-      // Send the token and new password to the backend to reset the password
-      const response = await axios.post('http://localhost:5000/reset-password', {
-        token,
-        newPassword: password,
-      });
+      // Implement your logic to send the token and new password to your backend for reset
+      // e.g., make an API call to the backend with the token and password
 
-      if (response.status === 200) {
-        setMessage('Password reset successfully.');
-        // Redirect to login page or show success message
-      } else {
-        setMessage('Error resetting password.');
-      }
+      setMessage('Password reset successfully.');
     } catch (error) {
-      console.log(error);
       setMessage('Error resetting password.');
     }
   };

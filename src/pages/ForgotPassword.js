@@ -1,11 +1,10 @@
+// ForgotPassword.js
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
-import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setEmail(e.target.value);
@@ -19,31 +18,24 @@ const ForgotPassword = () => {
       return;
     }
 
-    // Generate a reset token (You could also generate this on the server)
-    const resetToken = Math.random().toString(36).substring(2); // Example of token generation
-
-    // Construct the reset link
-    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
-
-    const templateParams = {
-      email_to: email,
-      subject: 'Password Reset Request',
-      message: `Click this link to reset your password: ${resetLink}`, // Send real reset link
-    };
-
     try {
+      const templateParams = {
+        email_to: email,
+        subject: 'Password Reset Request',
+        message: 'Click this link to reset your password: [reset_link]', // replace with real link
+      };
+
+      // Send email via EmailJS
       const response = await emailjs.send(
         'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_USER_ID'
       );
 
       if (response.status === 200) {
         setMessage('Password reset link sent successfully.');
-        navigate('/login'); // Redirect to login after email is sent
       } else {
         setMessage('Error sending password reset link.');
       }
     } catch (error) {
-      console.log(error);
       setMessage('Error sending password reset link.');
     }
   };
