@@ -72,11 +72,127 @@
   color: white;
 }
 
+.title-button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  flex-grow: 1;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.announcement-body {
+  padding: 20px;
+  background: white;
+}
+
+.announcement-footer {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  color: #6c757d;
+  text-align: right;
+}
+
+.announcement-admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.announcements-admin-controls {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.announcements-add-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.announcements-add-button:hover {
+  background-color: #218838;
+}
+
 /* Announcements Styling */
 .announcements-container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+}
+
+.announcements-main-title {
+  color: #61dafb;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.2rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.announcements-loading,
+.announcements-empty {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+.announcements-error {
+  text-align: center;
+  padding: 20px;
+  color: #dc3545;
+}
+
+.announcement-edit-btn, 
+.announcement-delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.announcement-edit-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.announcement-delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.announcement-card {
+  background: #f8f9fa; /* Light gray background instead of white */
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .announcement {
@@ -87,13 +203,13 @@
   overflow: hidden;
 }
 
-.announcement-title {
+.announcements-title {
   width: 100%;
   padding: 15px 20px;
-  background: #3DC6A6;
+  background: #0c572b;
   color: white;
   border: none;
-  text-align: left;
+  text-align: center;
   font-size: 1.1em;
   cursor: pointer;
   display: flex;
@@ -101,10 +217,30 @@
   align-items: center;
 }
 
+.announcement-title-button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  flex-grow: 1;
+  color: White; /* Blue color for titles */
+  padding: 5px;
+  font-weight: 500;
+  text-align: center; /* Center the title text */
+}
+
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #3DC6A6; /* Dark background for header */
+  color: white;
+}
+
 .announcement-content {
-  padding: 20px;
-  margin: 0;
-  background: white;
+  line-height: 1.6;
   color: #333;
 }
 
@@ -395,8 +531,7 @@
 .loading, .error {
   text-align: center;
   padding: 20px;
-  font-size: 1.2em;
-  border-radius: 8px;
+  font-size: 1.2rem;
 }
 
 .loading {
@@ -405,9 +540,15 @@
 }
 
 .error {
-  background: #fff5f5;
-  color: #e53e3e;
+  color: #d32f2f;
 }
+
+.admin-controls {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -594,8 +735,15 @@
   color: white;
 }
 
-<<<<<<< Updated upstream
-=======
+.add-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
 
 .add-announcement-button {
   margin-bottom: 20px;
@@ -629,7 +777,6 @@
   cursor: pointer;
 }
 
->>>>>>> Stashed changes
 /* Responsive Design for Login */
 @media (max-width: 480px) {
   .login-container {

@@ -1,56 +1,52 @@
 require('dotenv').config();
 const express = require('express');
-const { Pool } = require('pg'); // Replace mysql2 with pg
+const { Pool } = require('pg');
 const cors = require('cors');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
+// Enhanced CORS configuration
+const corsOptions = {
+  origin: [
+    'https://mordr3d64.github.io/',
+    'http://localhost:3000'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Neon Postgres Connection
+// Database connection with pooling
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: { rejectUnauthorized: false },
+  max: 5,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000
 });
-
-console.log('Loaded DATABASE_URL:', process.env.DATABASE_URL);
 
 // Test connection
 pool.query('SELECT NOW()')
   .then(res => console.log('Neon connected! Time:', res.rows[0].now))
   .catch(err => console.error('Connection failed:', err));
 
-
-const { Client } = require('pg');
-const client = new Client({
-  connectionString: 'postgresql://WebsiteData_owner:npg_vjlDyz7PWVt8@ep-steep-pond-a1qk1wij.ap-southeast-1.aws.neon.tech/WebsiteData?sslmode=require',
-  ssl: { rejectUnauthorized: false }
-});
-
-client.connect()
-  .then(() => console.log('Connected!'))
-  .catch(err => console.error('Connection failed:', err));
-
-// API Endpoints (Updated for Postgres)
+// API Endpoints
 app.get('/api/announcements', async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM announcements');
+    const { rows } = await pool.query('SELECT * FROM announcements ORDER BY created_at DESC');
     res.json(rows);
   } catch (err) {
     console.error('Error fetching announcements:', err);
-    res.status(500).send('Error fetching announcements');
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
 app.post('/api/announcements', async (req, res) => {
   const { title, content } = req.body;
   if (!title || !content) {
-    return res.status(400).send('Title and content are required');
+    return res.status(400).json({ error: 'Title and content required' });
   }
   try {
     const { rows } = await pool.query(
@@ -60,31 +56,32 @@ app.post('/api/announcements', async (req, res) => {
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error('Error adding announcement:', err);
-    res.status(500).send('Error adding announcement');
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
-app.put('/api/announcements/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, content } = req.body;
-  if (!title || !content) {
-    return res.status(400).send('Title and content are required');
-  }
-  try {
-    const { rowCount } = await pool.query(
-      'UPDATE announcements SET title = $1, content = $2 WHERE id = $3',
-      [title, content, id]
-    );
-    if (rowCount === 0) {
-      return res.status(404).send('Announcement not found');
-    }
-    res.send('Announcement updated successfully');
-  } catch (err) {
-    console.error('Error updating announcement:', err);
-    res.status(500).send('Error updating announcement');
-  }
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
 });
 
-app.listen(port, () => {
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+// Start server
+const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully');
+  server.close(() => {
+    pool.end();
+    console.log('Server closed');
+    process.exit(0);
+  });
 });
