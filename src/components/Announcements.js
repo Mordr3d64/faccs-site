@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function Announcements() {
   const [openAnnouncements, setOpenAnnouncements] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+
+  // Fetch announcements from the backend
+  useEffect(() => {
+    fetch('http://localhost:5000/api/announcements')
+      .then((res) => res.json())
+      .then((data) => setAnnouncements(data))
+      .catch((err) => console.error('Error fetching announcements:', err));
+  }, []);
 
   const toggleAnnouncement = (index) => {
     setOpenAnnouncements((prev) => {
@@ -11,26 +20,21 @@ function Announcements() {
     });
   };
 
-  const announcements = [
-    { title: "New Government Support for Farmers", content: "The Department of Agriculture has announced new financial aid programs for local farmers." },
-    { title: "FACCS Annual General Meeting", content: "Join us for our yearly meeting to discuss upcoming projects and cooperative strategies." },
-    { title: "Weather Alert: Typhoon Advisory", content: "A tropical storm is approaching, and we advise all farmers to secure their crops and equipment." },
-  ];
-
-  
   return (
     <div className="announcements-container">
       <h1>Announcements</h1>
       {announcements.map((announcement, index) => (
-        <div key={index} className="announcement">
+        <div key={announcement.id} className="announcement">
           <button onClick={() => toggleAnnouncement(index)} className="announcement-title">
             {announcement.title} {openAnnouncements[index] ? "▲" : "▼"}
           </button>
-          {openAnnouncements[index] && <p className="announcement-content">{announcement.content}</p>}
+          {openAnnouncements[index] && (
+            <p className="announcement-content">{announcement.content}</p>
+          )}
         </div>
       ))}
     </div>
   );
 }
 
-export default Announcements; 
+export default Announcements;
