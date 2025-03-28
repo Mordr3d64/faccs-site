@@ -792,11 +792,3 @@
     font-size: 1.5em;
   }
 }
-
-.home-carousel .carousel .slide img {
-  width: 600px;    /* Set the width of the image */
-  height: 400px;   /* Set the height of the image */
-  object-fit: cover; /* Ensures the image covers the area without distortion */
-  margin: 0 auto;  /* Center the image horizontally */
-  border-radius: 12px; /* Optional: add rounded corners to the images */
-}
