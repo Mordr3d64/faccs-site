@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
 import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
@@ -46,9 +46,14 @@ function Login() {
           />
         </div>
         <button type="submit">Login</button>
+
+        {/* Forgot Password Link */}
+        <div className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
+        </div>
       </form>
     </div>
   );
 }
 
-export default Login; 
+export default Login;
