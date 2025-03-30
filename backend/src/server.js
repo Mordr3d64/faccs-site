@@ -2,8 +2,6 @@ const express = require('express');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const mysql = require('mysql2');
-const bcrypt = require('bcryptjs');
 
 // Load environment variables
 dotenv.config();
@@ -14,62 +12,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MySQL Connection
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '', // Add your MySQL password here if you set one
-  database: 'faccs'
-});
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL database:', err);
-    return;
-  }
-  console.log('Connected to MySQL database!');
-});
+// Static admin credentials
+const ADMIN_CREDENTIALS = {
+  email: 'admin@faccs.com',
+  password: 'admin123'
+};
 
 // Routes
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Please provide email and password'
-    });
-  }
-
-  const query = 'SELECT * FROM users WHERE email = ?';
-  connection.query(query, [email], async (err, results) => {
-    if (err) {
-      console.error('Error querying database:', err);
-      return res.status(500).json({
-        status: 'fail',
-        message: 'Database error'
-      });
-    }
-
-    if (results.length === 0) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Incorrect email or password'
-      });
-    }
-
-    const user = results[0];
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Incorrect email or password'
-      });
-    }
-
+  if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { email, role: 'admin' },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN }
     );
@@ -79,13 +34,18 @@ app.post('/api/auth/login', async (req, res) => {
       token,
       data: {
         user: {
-          id: user.id,
-          email: user.email,
-          role: user.role
+          name: 'Admin User',
+          email: ADMIN_CREDENTIALS.email,
+          role: 'admin'
         }
       }
     });
-  });
+  } else {
+    res.status(401).json({
+      status: 'fail',
+      message: 'Incorrect email or password'
+    });
+  }
 });
 
 // Error handling middleware
