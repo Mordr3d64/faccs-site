@@ -1,6 +1,6 @@
 // ForgotPassword.js
 import React, { useState } from 'react';
-import emailjs from 'emailjs-com';
+import axios from 'axios'; // Add Axios for API requests
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -19,17 +19,9 @@ const ForgotPassword = () => {
     }
 
     try {
-      const templateParams = {
-        email_to: email,
-        subject: 'Password Reset Request',
-        message: 'Click this link to reset your password: [reset_link]', // replace with real link
-      };
-
-      // Send email via EmailJS
-      const response = await emailjs.send(
-        'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_USER_ID'
-      );
-
+      // Call backend to generate OTP and send email
+      const response = await axios.post('/api/forgot-password', { email });
+      
       if (response.status === 200) {
         setMessage('Password reset link sent successfully.');
       } else {

@@ -1,148 +1,109 @@
 require('dotenv').config({ path: './backend/.env' });
 const express = require('express');
-const { Pool } = require('pg');
+const emailjs = require('emailjs-com');
+const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
 const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// In-memory storage for OTPs (used only for the current server runtime)
+const otpStore = {};
+
 // Enhanced CORS configuration
 const corsOptions = {
-  origin: '*',  // More permissive for development
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Database connection with pooling
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  max: 5,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000
-});
+// Forgot Password - Generate and send OTP
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
 
-// Test connection
-pool.query('SELECT NOW()')
-  .then(res => console.log('Neon connected! Time:', res.rows[0].now))
-  .catch(err => console.error('Connection failed:', err));
-
-// API Endpoints
-app.get('/api/announcements', async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM announcements ORDER BY created_at DESC');
-    res.json(rows);
-  } catch (err) {
-    console.error('Error fetching announcements:', err);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-app.post('/api/announcements', async (req, res) => {
-  const { title, content } = req.body;
-  if (!title || !content) {
-    return res.status(400).json({ error: 'Title and content required' });
-  }
-  try {
-    const { rows } = await pool.query(
-      'INSERT INTO announcements (title, content) VALUES ($1, $2) RETURNING *',
-      [title, content]
-    );
-    res.status(201).json(rows[0]);
-  } catch (err) {
-    console.error('Error adding announcement:', err);
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-app.put('/api/announcements/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, content } = req.body;
-
-  // Validate input
-  if (!title || !content) {
-    return res.status(400).json({ 
-      error: 'Validation failed',
-      details: 'Both title and content are required' 
-    });
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
   }
 
   try {
-    const { rows } = await pool.query(
-      `UPDATE announcements 
-       SET title = $1, content = $2 
-       WHERE id = $3 
-       RETURNING id, title, content, created_at`, // Only return existing columns
-      [title, content, id]
+    // Generate OTP (One-Time Password)
+    const otp = crypto.randomInt(100000, 999999).toString(); // 6-digit OTP
+    
+    // Store OTP in memory with expiration time (e.g., 15 minutes)
+    otpStore[email] = { otp, expiresAt: Date.now() + 15 * 60 * 1000 }; // 15 minutes expiration time
+    
+    // Send OTP via email
+    const templateParams = {
+      email_to: email,
+      subject: 'Password Reset Request',
+      message: `Your OTP for password reset is: ${otp}`,
+    };
+
+    const response = await emailjs.send(
+      'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams, 'YOUR_USER_ID'
     );
 
-    if (rows.length === 0) {
-      return res.status(404).json({ 
-        error: 'Not found',
-        details: 'No announcement found with that ID' 
-      });
+    if (response.status === 200) {
+      return res.status(200).json({ message: 'OTP sent successfully to your email.' });
+    } else {
+      return res.status(500).json({ error: 'Error sending OTP' });
+    }
+  } catch (err) {
+    console.error('Error in forgot password route:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Verify OTP and Reset Password
+app.post('/api/reset-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ error: 'Email, OTP, and new password are required' });
+  }
+
+  try {
+    // Check if the OTP exists and is still valid
+    if (!otpStore[email]) {
+      return res.status(400).json({ error: 'OTP not found or expired' });
     }
 
-    res.json(rows[0]);
-  } catch (err) {
-    console.error('Database error:', err);
-    res.status(500).json({ 
-      error: 'Database operation failed',
-      details: err.message 
-    });
-  }
-});
-
-app.delete('/api/announcements/:id', async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    const { rowCount } = await pool.query(
-      'DELETE FROM announcements WHERE id = $1',
-      [id]
-    );
-
-    if (rowCount === 0) {
-      return res.status(404).json({ 
-        error: 'Not found',
-        details: 'No announcement found with that ID' 
-      });
+    const storedOtp = otpStore[email];
+    const currentTime = Date.now();
+    
+    // Check OTP expiration
+    if (currentTime > storedOtp.expiresAt) {
+      delete otpStore[email]; // Remove expired OTP
+      return res.status(400).json({ error: 'OTP has expired' });
     }
 
-    res.status(204).end(); // 204 No Content for successful deletes
+    // Check if OTP matches
+    if (otp !== storedOtp.otp) {
+      return res.status(400).json({ error: 'Invalid OTP' });
+    }
+
+    // Hash the new password before saving it
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // For simplicity, assume the email belongs to a single admin
+    // Ideally, update the password in your system, e.g., in a database
+    console.log(`Password for ${email} updated to: ${hashedPassword}`);
+
+    // Optionally, delete the OTP record after successful reset
+    delete otpStore[email];
+
+    res.status(200).json({ message: 'Password reset successfully' });
   } catch (err) {
-    console.error('Delete error:', err);
-    res.status(500).json({ 
-      error: 'Database operation failed',
-      details: err.message 
-    });
+    console.error('Error in reset password route:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Internal server error' });
 });
 
 // Start server
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server running on port ${port}`);
-});
-
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Shutting down gracefully');
-  server.close(() => {
-    pool.end();
-    console.log('Server closed');
-    process.exit(0);
-  });
 });

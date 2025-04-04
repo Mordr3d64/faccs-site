@@ -1,14 +1,15 @@
 // ResetPassword.js
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ResetPassword = ({ match }) => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
+  const [otp, setOtp] = useState('');
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    // Extract token from the URL (sent via email)
     const { token } = match.params;
     setToken(token);
   }, [match.params]);
@@ -30,10 +31,17 @@ const ResetPassword = ({ match }) => {
     }
 
     try {
-      // Implement your logic to send the token and new password to your backend for reset
-      // e.g., make an API call to the backend with the token and password
+      const response = await axios.post('/api/reset-password', {
+        password,
+        token,
+        otp
+      });
 
-      setMessage('Password reset successfully.');
+      if (response.status === 200) {
+        setMessage('Password reset successfully.');
+      } else {
+        setMessage('Error resetting password.');
+      }
     } catch (error) {
       setMessage('Error resetting password.');
     }
@@ -55,6 +63,13 @@ const ResetPassword = ({ match }) => {
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
           placeholder="Confirm new password"
+          required
+        />
+        <input
+          type="text"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP"
           required
         />
         <button type="submit">Reset Password</button>
