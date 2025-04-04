@@ -32,8 +32,8 @@ const ResetPassword = ({ match }) => {
 
     try {
       const response = await axios.post('/api/reset-password', {
+        email: 'user@example.com',  // Replace with actual email if available
         password,
-        token,
         otp
       });
 

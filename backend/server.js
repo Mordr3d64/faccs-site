@@ -16,23 +16,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Remove PostgreSQL connection pooling since we're not using it anymore
-// const pool = new Pool({
-//   connectionString: process.env.DATABASE_URL,
-//   ssl: { rejectUnauthorized: false },
-//   max: 5,
-//   idleTimeoutMillis: 30000,
-//   connectionTimeoutMillis: 2000
-// });
+// Temporary OTP store (use a real database in production)
+let otpStore = {}; // This will store OTPs temporarily
 
 // Test endpoint to confirm server is up
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });
 
-// New Routes for OTP-based Password Reset
-let otpStore = {}; // Temporarily store OTPs (use database in production)
-
+// API Route: Forgot Password - Generate OTP and Send Email
 app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
 
@@ -69,14 +61,16 @@ app.post('/api/forgot-password', async (req, res) => {
   }
 });
 
+// API Route: Reset Password - Verify OTP and Reset Password
 app.post('/api/reset-password', async (req, res) => {
   const { email, otp, password } = req.body;
 
+  // Validate OTP
   if (otpStore[email] !== otp) {
     return res.status(400).send('Invalid OTP.');
   }
 
-  // Here, you'd hash and update the password in your database (if you had one)
+  // Here, you would hash and update the password in your database (if you had one)
   // Example: hashPassword(password);
 
   // Clear OTP after successful reset
