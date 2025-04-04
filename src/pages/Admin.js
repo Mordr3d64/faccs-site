@@ -1,16 +1,39 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
 
 function Admin() {
-  const members = [
-    { id: 1, name: 'Alice Smith', email: 'alice@example.com', role: 'Member', status: 'Active' },
-    { id: 2, name: 'Bob Johnson', email: 'bob@example.com', role: 'Admin', status: 'Inactive' },
-    { id: 3, name: 'Charlie Brown', email: 'charlie@example.com', role: 'Member', status: 'Active' },
-    { id: 4, name: 'Nekoarc', email: 'burenyuu@example.com', role: 'Admin', status: 'Active' }
-  ];
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { currentUser, logout } = useAuth();
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/users');
+        if (!response.ok) throw new Error('Failed to fetch members');
+        
+        const data = await response.json();
+        setMembers(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
+
+  if (loading) return <div>Loading members...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div>
-      <h2>Admin - Member Records</h2>
+      <div className="admin-header">
+        <h2>Admin Panel - Welcome {currentUser?.name}</h2>
+        <button onClick={logout}>Logout</button>
+      </div>
       <table className="MemberTable">
         <thead>
           <tr>
@@ -37,4 +60,4 @@ function Admin() {
   );
 }
 
-export default Admin; 
+export default Admin;

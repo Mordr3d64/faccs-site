@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link for navigation
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function Login() {
@@ -9,14 +9,19 @@ function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    if (login(email, password)) {
+  
+    try {
+      const success = await login(email, password);
+      if (!success) {
+        throw new Error('Invalid email or password');
+      }
       navigate('/admin');
-    } else {
-      setError('Invalid email or password');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError(err.message || 'Login failed. Please try again.');
     }
   };
 
@@ -46,11 +51,6 @@ function Login() {
           />
         </div>
         <button type="submit">Login</button>
-
-        {/* Forgot Password Link */}
-        <div className="forgot-password">
-          <Link to="/forgot-password">Forgot Password?</Link>
-        </div>
       </form>
     </div>
   );

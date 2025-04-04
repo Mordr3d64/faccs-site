@@ -2,6 +2,7 @@ require('dotenv').config({ path: './backend/.env' });
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -53,6 +54,65 @@ app.post('/api/announcements', async (req, res) => {
     res.status(201).json(rows[0]);
   } catch (err) {
     console.error('Error adding announcement:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  console.log('Login attempt for:', email); // Debug log
+
+  try {
+    const { rows } = await pool.query(
+      'SELECT * FROM users WHERE email = $1',
+      [email]
+    );
+
+    console.log('Database query results:', rows); // Debug log
+
+    if (rows.length === 0) {
+      console.log('No user found with email:', email);
+      return res.status(401).json({ 
+        success: false,
+        error: 'Invalid credentials' 
+      });
+    }
+    
+    const user = rows[0];
+    const passwordMatch = await bcrypt.compare(password, user.password_hash);
+    console.log('Password match result:', passwordMatch); // Debug log
+
+    if (!passwordMatch) {
+      console.log('Password mismatch for user:', email);
+      return res.status(401).json({ 
+        success: false,
+        error: 'Invalid credentials' 
+      });
+    }
+
+    const { password_hash, ...userData } = user;
+    console.log('Successful login for:', email);
+    res.json({ 
+      success: true,
+      user: userData
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error during login' 
+    });
+  }
+});
+
+app.get('/api/users', async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      'SELECT id, name, email, role, status FROM users'
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error('Users fetch error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
