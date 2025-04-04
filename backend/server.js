@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './backend/.env' });
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
@@ -8,10 +8,7 @@ const port = process.env.PORT || 5000;
 
 // Enhanced CORS configuration
 const corsOptions = {
-  origin: [
-    'https://mordr3d64.github.io/',
-    'http://localhost:3000'
-  ],
+  origin: '*',  // More permissive for development
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };
