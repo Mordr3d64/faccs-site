@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function AnnouncementForm({ announcement, onSave, onCancel }) {
@@ -49,6 +50,7 @@ function AnnouncementForm({ announcement, onSave, onCancel }) {
 }
 
 function Announcements() {
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [openAnnouncements, setOpenAnnouncements] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
@@ -160,10 +162,10 @@ function Announcements() {
       {isAuthenticated && (
         <div className="announcements-admin-controls">
           <button 
-            onClick={() => window.location.href = '/add-announcement'}
+            onClick={() => navigate('/add-announcement')}
             className="announcements-add-button"
           >
-            Add New Announcement
+          Add New Announcement
           </button>
         </div>
       )}
