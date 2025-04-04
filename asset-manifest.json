@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/faccs-site/static/css/main.144662e5.css",
-    "main.js": "/faccs-site/static/js/main.d8ef7a79.js",
+    "main.css": "/faccs-site/static/css/main.e4e12afd.css",
+    "main.js": "/faccs-site/static/js/main.f3fdc5db.js",
     "static/js/453.200f1e96.chunk.js": "/faccs-site/static/js/453.200f1e96.chunk.js",
     "static/media/image4.jpg": "/faccs-site/static/media/image4.289abfdfd9d8d406ec9a.jpg",
     "static/media/image3.jpg": "/faccs-site/static/media/image3.59189c2cd06222cbd599.jpg",
@@ -9,12 +9,12 @@
     "static/media/image1.jpg": "/faccs-site/static/media/image1.f9de643b44635eee2614.jpg",
     "static/media/image2.jpg": "/faccs-site/static/media/image2.e02a46b023c188eb90ad.jpg",
     "index.html": "/faccs-site/index.html",
-    "main.144662e5.css.map": "/faccs-site/static/css/main.144662e5.css.map",
-    "main.d8ef7a79.js.map": "/faccs-site/static/js/main.d8ef7a79.js.map",
+    "main.e4e12afd.css.map": "/faccs-site/static/css/main.e4e12afd.css.map",
+    "main.f3fdc5db.js.map": "/faccs-site/static/js/main.f3fdc5db.js.map",
     "453.200f1e96.chunk.js.map": "/faccs-site/static/js/453.200f1e96.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.144662e5.css",
-    "static/js/main.d8ef7a79.js"
+    "static/css/main.e4e12afd.css",
+    "static/js/main.f3fdc5db.js"
   ]
 }
