@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -31,6 +32,42 @@ const pool = new Pool({
 pool.query('SELECT NOW()')
   .then(res => console.log('Neon connected! Time:', res.rows[0].now))
   .catch(err => console.error('Connection failed:', err));
+
+// Static admin credentials
+const ADMIN_CREDENTIALS = {
+  email: 'admin@faccs.com',
+  password: 'admin123'
+};
+
+// Authentication route
+app.post('/api/auth/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+    const token = jwt.sign(
+      { email, role: 'admin' },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user: {
+          name: 'Admin User',
+          email: ADMIN_CREDENTIALS.email,
+          role: 'admin'
+        }
+      }
+    });
+  } else {
+    res.status(401).json({
+      status: 'fail',
+      message: 'Incorrect email or password'
+    });
+  }
+});
 
 // API Endpoints
 app.get('/api/announcements', async (req, res) => {
