@@ -38,6 +38,8 @@
 
 }
 
+
+
 .NavPanel {
   list-style-type: none;
   margin: 0;
@@ -175,6 +177,59 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
+}
+
+.announcement-edit-form {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 5px;
+}
+
+.announcement-edit-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.announcement-edit-form input,
+.announcement-edit-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.announcement-edit-form textarea {
+  min-height: 100px;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.announcement-edit-form .form-group {
+  margin-bottom: 15px;
 }
 
 .announcement-edit-btn {

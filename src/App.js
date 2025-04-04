@@ -14,8 +14,8 @@ import Announcements from './components/Announcements';
 import Contact from './components/Contact';
 import Weather from './components/Weather';
 import FAQs from './components/FAQs';
-import ForgotPassword from './pages/ForgotPassword'; // Import ForgotPassword component
-import ResetPassword from './pages/ResetPassword'; // Import ResetPassword component
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 // Context
 import { AuthProvider } from './contexts/AuthContext';
@@ -34,8 +34,8 @@ function App() {
               <Route path="/weather" element={<Weather />} />
               <Route path="/faqs" element={<FAQs />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Forgot password route */}
-              <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Reset password route */}
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
               <Route
                 path="/admin"
                 element={
