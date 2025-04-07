@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 
 // Enhanced CORS configuration
 const corsOptions = {
-  origin: '*',  // More permissive for development
+  origin: ['http://localhost:3000', 'https://mordr3d64.github.io', /\.ngrok\.io$/],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 };

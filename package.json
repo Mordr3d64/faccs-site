@@ -28,7 +28,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "npx concurrently \"react-scripts start\" \"node backend/server.js\"",
+    "start": "npx concurrently \"react-scripts start\" \"node backend/server.js\" \"node backend/ngrok.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
