@@ -108,6 +108,8 @@
 .announcement-body {
   padding: 20px;
   background: white;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .announcement-footer {
@@ -120,6 +122,8 @@
 .announcement-admin-actions {
   display: flex;
   gap: 10px;
+  margin-left: 15px;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .announcements-admin-controls {
@@ -147,6 +151,8 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .announcements-main-title {
@@ -243,33 +249,13 @@
 }
 
 .announcement-card {
-  background: #f8f9fa; /* Light gray background instead of white */
+  width: 100%;
+  background: white;
   border-radius: 8px;
   margin-bottom: 20px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.announcement {
-  background: white;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.announcements-title {
-  width: 100%;
-  padding: 15px 20px;
-  background: #0c572b;
-  color: white;
-  border: none;
-  text-align: center;
-  font-size: 1.1em;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  box-sizing: border-box;
 }
 
 .announcement-title-button {
@@ -278,11 +264,14 @@
   font-size: 1.1rem;
   cursor: pointer;
   text-align: left;
-  flex-grow: 1;
-  color: White; /* Blue color for titles */
+  color: white;
   padding: 5px;
   font-weight: 500;
-  text-align: center; /* Center the title text */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .announcement-header {
@@ -290,8 +279,10 @@
   justify-content: space-between;
   align-items: center;
   padding: 15px 20px;
-  background-color: #3DC6A6; /* Dark background for header */
+  background-color: #3DC6A6;
   color: white;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .announcement-content {
@@ -330,12 +321,157 @@
   padding: 20px;
 }
 
+.faqs-admin-controls {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.faqs-add-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.faqs-add-button:hover {
+  background-color: #218838;
+}
+
+.faq-card {
+  width: 100%;
+  max-width: 800px; /* Match announcements width */
+  margin: 0 auto 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.add-faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .faq-item {
   background: white;
   border-radius: 8px;
   margin-bottom: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+}
+
+.faqs-error {
+  text-align: center;
+  padding: 20px;
+  color: #dc3545;
+}
+
+.faqs-loading,
+.faqs-empty {
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+.faq-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #3DC6A6;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.faq-title-button {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: white;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0; /* Crucial for text overflow */
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-title-button::after {
+  content: "▼";
+  margin-left: 10px;
+  font-size: 0.9em;
+  transition: transform 0.2s;
+}
+
+.faq-title-button[aria-expanded="true"]::after {
+  content: "▲";
+}
+
+
+.faq-title-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 10px;
+}
+
+.faq-arrow {
+  flex-shrink: 0;
+  padding-left: 10px;
+}
+
+.faq-admin-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 15px;
+  flex-shrink: 0; /* Prevent button shrinking */
+}
+
+.faq-body {
+  padding: 15px;
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word; /* Force long words to break */
+  overflow-wrap: break-word;
+}
+
+.faq-body p {
+  margin: 0 0 10px 0;
+  word-break: break-word;
+}
+
+.faq-edit-btn,
+.faq-delete-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.faq-edit-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.faq-delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.faq-edit-form {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 5px;
 }
 
 .faq-question {
@@ -607,6 +743,19 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .faq-header {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .faq-title-button {
+    width: 100%;
+  }
+  
+  .faq-admin-actions {
+    margin-left: auto; /* Push buttons to right */
+  }
+
   .NavPanel {
     flex-direction: column;
     height: auto;

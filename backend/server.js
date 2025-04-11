@@ -192,6 +192,97 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
+// FAQ CRUD endpoints
+app.get('/api/faqs', async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM faqs ORDER BY created_at DESC');
+    res.json(rows);
+  } catch (err) {
+    console.error('Error fetching FAQs:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.post('/api/faqs', async (req, res) => {
+  const { title, answer, answer_english } = req.body;
+  if (!title || !answer || !answer_english) {
+    return res.status(400).json({ error: 'All fields are required' });
+  }
+  try {
+    const { rows } = await pool.query(
+      'INSERT INTO faqs (title, answer, answer_english) VALUES ($1, $2, $3) RETURNING *',
+      [title, answer, answer_english]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error adding FAQ:', err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+app.put('/api/faqs/:id', async (req, res) => {
+  const { id } = req.params;
+  const { title, answer, answer_english } = req.body;
+
+  if (!title || !answer || !answer_english) {
+    return res.status(400).json({ 
+      error: 'Validation failed',
+      details: 'All fields are required' 
+    });
+  }
+
+  try {
+    const { rows } = await pool.query(
+      `UPDATE faqs 
+       SET title = $1, answer = $2, answer_english = $3
+       WHERE id = $4 
+       RETURNING *`,
+      [title, answer, answer_english, id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({ 
+        error: 'Not found',
+        details: 'No FAQ found with that ID' 
+      });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ 
+      error: 'Database operation failed',
+      details: err.message 
+    });
+  }
+});
+
+app.delete('/api/faqs/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM faqs WHERE id = $1',
+      [id]
+    );
+
+    if (rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not found',
+        details: 'No FAQ found with that ID' 
+      });
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ 
+      error: 'Database operation failed',
+      details: err.message 
+    });
+  }
+});
+
 // Start server
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);

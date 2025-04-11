@@ -1,63 +1,200 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function FAQs() {
-  const [openIndex, setOpenIndex] = useState(null);
+  const [faqs, setFaqs] = useState([]);
+  const [openFAQs, setOpenFAQs] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+  useEffect(() => {
+    fetchFAQs();
+  }, []);
+
+  const fetchFAQs = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('http://localhost:5000/api/faqs');
+      if (!response.ok) throw new Error('Failed to fetch FAQs');
+      
+      const data = await response.json();
+      setFaqs(data);
+      setOpenFAQs(new Array(data.length).fill(false));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const faqs = [
-    {
-      title: "Ano ang Federation of Agriculture Cooperatives in Camarines Sur (FACCS)? / What is FACCS?",
-      answer: "Ang Federation of Agriculture Cooperatives in Camarines Sur (FACCS) ay isang pangalawang kooperatiba na itinatag noong Agosto 15, 2019. Layunin nitong pag-isahin ang mga mapagkumpetensyang, napapanatili, at makabagong teknolohiyang kooperatiba sa agrikultura sa Camarines Sur.",
-      answerEnglish: "The Federation of Agriculture Cooperatives in Camarines Sur (FACCS) is a secondary cooperative established on August 15, 2019. It aims to unify competitive, sustainable, and technology-based agriculture cooperatives in Camarines Sur."
-    },
-    {
-      title: "Anong mga serbisyo ang iniaalok ng FACCS? / What services does FACCS offer?",
-      answer: "Ang FACCS ay nagbibigay ng iba't ibang serbisyo tulad ng pinansyal na tulong, pagsasanay sa agrikultura, suporta sa pag-access sa merkado, at pagsasama ng teknolohiya upang mapabuti ang ani at pagpapanatili ng sakahan.",
-      answerEnglish: "FACCS provides various services including financial assistance, agricultural training, market access support, and technology integration to help farmers enhance productivity and sustainability."
-    },
-    {
-      title: "Paano ako magiging miyembro ng FACCS? / How can I become a member of FACCS?",
-      answer: "Upang maging miyembro ng FACCS, kailangang miyembro ka ng isang pangunahing kooperatiba sa Camarines Sur. Maaari kang makipag-ugnayan sa amin sa federation.agricoops.camarinessur@gmail.com o tumawag sa +63 948 933 4240 para sa karagdagang impormasyon.",
-      answerEnglish: "To become a member of FACCS, you must be part of a primary cooperative in Camarines Sur. You can contact us at federation.agricoops.camarinessur@gmail.com or call +63 948 933 4240 for more details."
-    },
-    {
-      title: "Paano ako makakakuha ng tulong pinansyal mula sa FACCS? / How can I get financial assistance from FACCS?",
-      answer: "Ang FACCS ay nagbibigay ng iba't ibang programa ng tulong pinansyal para sa mga magsasaka. Upang mag-apply, makipag-ugnayan sa amin sa pamamagitan ng federation.agricoops.camarinessur@gmail.com o tumawag sa +63 948 933 4240.",
-      answerEnglish: "FACCS offers various financial aid programs for farmers. You may apply by contacting us at federation.agricoops.camarinesur@gmail.com or calling +63 948 933 4240."
-    },
-    {
-      title: "Paano ako makakakuha ng impormasyon sa panahon? / How can I get weather updates?",
-      answer: "Maaari mong bisitahin ang aming seksyon na 'Weather' sa website upang makuha ang pinakabagong impormasyon tungkol sa lagay ng panahon sa Camarines Sur.",
-      answerEnglish: "You can visit our 'Weather' section on our website to get the latest updates on weather conditions in Camarines Sur."
-    },
-    {
-      title: "Paano makontak ang FACCS? / How can I contact FACCS?",
-      answer: "Maaari mo kaming tawagan sa +63 948 933 4240 o i-email sa federation.agricoops.camarinessur@gmail.com. Maaari mo ring bisitahin ang aming opisina sa Naga City, Camarines Sur.",
-      answerEnglish: "You can contact us via phone at +63 948 933 4240 or email us at federation.agricoops.camarinessur@gmail.com. You may also visit our office in Naga City, Camarines Sur."
+  const toggleFAQ = (index) => {
+    setOpenFAQs(prev => {
+      const updated = [...prev];
+      updated[index] = !updated[index];
+      return updated;
+    });
+  };
+
+  const handleEdit = (id) => {
+    setEditingId(id);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+  };
+
+  const handleSaveEdit = async (id, updatedData) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/faqs/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Update failed');
+      }
+
+      setFaqs(prev => prev.map(faq => 
+        faq.id === id ? { ...faq, ...updatedData } : faq
+      ));
+      setEditingId(null);
+    } catch (err) {
+      console.error('Update failed:', err);
+      setError(`Update failed: ${err.message}`);
     }
-  ];
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this FAQ?')) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/faqs/${id}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Delete failed');
+      }
+
+      setFaqs(prev => prev.filter(faq => faq.id !== id));
+    } catch (err) {
+      console.error('Delete failed:', err);
+      setError(`Delete failed: ${err.message}`);
+    }
+  };
+
+  if (loading) return <div className="faqs-loading">Loading FAQs...</div>;
+  if (error) return <div className="faqs-error">{error}</div>;
 
   return (
     <div className="faqs-container">
       <h1>FAQs / Mga Madalas Itanong</h1>
-      {faqs.map((faq, index) => (
-        <div key={index} className="faq-item">
-          <button onClick={() => toggleFAQ(index)} className="faq-question">
-            {faq.title} {openIndex === index ? "▲" : "▼"}
+      
+      {isAuthenticated && (
+        <div className="faqs-admin-controls">
+          <button 
+            onClick={() => navigate('/add-faq')}
+            className="faqs-add-button"
+          >
+            Add New FAQ
           </button>
-          {openIndex === index && (
-            <div className="faq-answer">
-              <p><strong>🇵🇭 Tagalog:</strong> {faq.answer}</p>
-              <p><strong>English:</strong> {faq.answerEnglish}</p>
-            </div>
-          )}
         </div>
-      ))}
+      )}
+
+      {faqs.length === 0 ? (
+        <p className="faqs-empty">No FAQs available</p>
+      ) : (
+        faqs.map((faq, index) => (
+          <div key={faq.id} className="faq-card">
+            {editingId === faq.id ? (
+              <div className="faq-edit-form">
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSaveEdit(faq.id, {
+                    title: e.target.title.value,
+                    answer: e.target.answer.value,
+                    answer_english: e.target.answer_english.value
+                  });
+                }}>
+                  <div className="form-group">
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      defaultValue={faq.title}
+                      required
+                      className="form-input"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Tagalog Answer</label>
+                    <textarea
+                      name="answer"
+                      defaultValue={faq.answer}
+                      required
+                      className="form-textarea"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>English Answer</label>
+                    <textarea
+                      name="answer_english"
+                      defaultValue={faq.answer_english}
+                      required
+                      className="form-textarea"
+                    />
+                  </div>
+                  <div className="form-actions">
+                    <button type="submit" className="save-btn">Save Changes</button>
+                    <button type="button" onClick={handleCancelEdit} className="cancel-btn">Cancel</button>
+                  </div>
+                </form>
+              </div>
+            ) : (
+              <>
+                <div className="faq-header">
+                  <button 
+                    onClick={() => toggleFAQ(index)} 
+                    className="faq-title-button"
+                  >
+                    <span className="faq-title-text">{faq.title}</span>
+                    <span className="faq-arrow">{openFAQs[index] ? "▲" : "▼"}</span>
+                  </button>
+                  
+                  {isAuthenticated && (
+                    <div className="faq-admin-actions">
+                      <button className="faq-edit-btn" onClick={() => handleEdit(faq.id)}>
+                        Edit
+                      </button>
+                      <button className="faq-delete-btn" onClick={() => handleDelete(faq.id)}>
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
+                
+                {openFAQs[index] && (
+                  <div className="faq-body">
+                    <p><strong>🇵🇭 Tagalog:</strong> {faq.answer}</p>
+                    <p><strong>English:</strong> {faq.answer_english}</p>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ))
+      )}
     </div>
   );
 }
 
-export default FAQs; 
+export default FAQs;

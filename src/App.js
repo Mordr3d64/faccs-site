@@ -5,7 +5,8 @@ import React from 'react';
 // Components
 import NavPanel from './components/NavPanel';
 import ProtectedRoute from './components/ProtectedRoute';
-import AddAnnouncement from './components/AddAnnouncement'; // Add this import
+import AddAnnouncement from './components/AddAnnouncement';
+import AddFAQ from './components/AddFAQ'; // Add this import
 
 // Pages
 import Home from './pages/Home';
@@ -31,9 +32,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/announcements" element={<Announcements />} />
-              <Route 
-                path="/add-announcement" 
-                element={
+              <Route path="/add-announcement" element={
                   <ProtectedRoute>
                     <AddAnnouncement />
                   </ProtectedRoute>
@@ -42,6 +41,12 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/weather" element={<Weather />} />
               <Route path="/faqs" element={<FAQs />} />
+              <Route path="/add-faq" element={
+                  <ProtectedRoute>
+                    <AddFAQ />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="/login" element={<Login />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/reset-password/:token" element={<ResetPassword />} />
