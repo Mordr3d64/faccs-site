@@ -33,7 +33,7 @@ function Weather() {
       try {
         // Try primary API first
         const encodedLocation = encodeURIComponent(locations[selectedLocation]);
-        const apiUrl = `https://wttr.in/${encodedLocation}?format=%C|%t|%h|%w|%u|%p`;
+        const apiUrl = `https://wttr.in/${encodedLocation}?format=%C|%t|%h|%w|%u|%p&n&Q`;
         
         const response = await fetch(apiUrl, {
           headers: {
@@ -155,7 +155,7 @@ function Weather() {
           ))}
         </select>
       </div>
-
+  
       {loading && <div className="loading">Loading weather data...</div>}
       {error && <div className="error">{error}</div>}
       
@@ -163,35 +163,21 @@ function Weather() {
         <div className="weather-info">
           <div className="weather-header">
             <h3>{selectedLocation}</h3>
-            {weatherData.imageUrl && (
-              typeof weatherData.imageUrl === 'string' && weatherData.imageUrl.startsWith('http') ? (
-                <img 
-                  src={weatherData.imageUrl} 
-                  alt={`Weather in ${selectedLocation}`} 
-                  className="weather-icon"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
-                  }}
-                />
-              ) : (
-                <span className="weather-emoji">{weatherData.imageUrl}</span>
-              )
-            )}
           </div>
-          <div className="weather-details">
-            <div className="weather-detail-item">
+          <div className="weather-details-grid">
+            <div className="weather-grid-item">
               <span className="label">Condition:</span>
               <span className="value">{weatherData.condition || 'N/A'}</span>
             </div>
-            <div className="weather-detail-item">
+            <div className="weather-grid-item">
               <span className="label">Temperature:</span>
               <span className="value">{weatherData.temperature || 'N/A'}</span>
             </div>
-            <div className="weather-detail-item">
+            <div className="weather-grid-item">
               <span className="label">Humidity:</span>
               <span className="value">{weatherData.humidity || 'N/A'}</span>
             </div>
-            <div className="weather-detail-item">
+            <div className="weather-grid-item">
               <span className="label">Wind:</span>
               <span className="value">{weatherData.wind || 'N/A'}</span>
             </div>
