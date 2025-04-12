@@ -283,6 +283,77 @@ app.delete('/api/faqs/:id', async (req, res) => {
   }
 });
 
+app.post('/api/users', async (req, res) => {
+  const { name, email, password, role, status } = req.body;
+  
+  // Validate input
+  if (!name || !email || !password) {
+    return res.status(400).json({ 
+      error: 'Validation failed',
+      details: 'Name, email, and password are required' 
+    });
+  }
+
+  try {
+    // Hash the password
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const { rows } = await pool.query(
+      `INSERT INTO users (name, email, password_hash, role, status)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, name, email, role, status`,
+      [
+        name,
+        email,
+        passwordHash,
+        role || 'member',
+        status || 'active'
+      ]
+    );
+
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error('Error creating user:', err);
+    if (err.code === '23505') { // Unique violation
+      return res.status(400).json({ 
+        error: 'Validation failed',
+        details: 'Email already exists' 
+      });
+    }
+    res.status(500).json({ 
+      error: 'Database error',
+      details: err.message 
+    });
+  }
+});
+
+app.delete('/api/users/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const { rowCount } = await pool.query(
+      'DELETE FROM users WHERE id = $1',
+      [id]
+    );
+
+    if (rowCount === 0) {
+      return res.status(404).json({ 
+        error: 'Not found',
+        details: 'No user found with that ID' 
+      });
+    }
+
+    res.status(204).end();
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ 
+      error: 'Database operation failed',
+      details: err.message 
+    });
+  }
+});
+
 // Start server
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
